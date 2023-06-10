@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stardew Community | Cadastro</title>
+    <link rel="icon" href="imgs/chicken.jpg">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- INICIO DO HEADER -->
+    <div class="header">
+        <div class="conteiner">
+            <h1>Stardew Community</h1>
+            <ul>
+
+                <li>
+                    <a href="index.html">Home</a>
+                </li>
+
+                <li>
+                    <a href="sobreJogo.html">Sobre o Jogo</a>
+                </li>
+
+                <li>
+                    <a
+                        href="login.html">Login
+                    </a>
+                </li>
+
+                <li>
+                    <a class="selecionado" href="">Cadastro</a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+
+    <!-- FIM DO HEADER -->
+    <!-- COMECO DO BANNER -->
+
+    <div id="alertaCadastro" class="alert" style="display: none;">
+    </div>
+
+    <div class="banner">
+
+        <div class="imagem">
+            <img style="border: black 2px solid; width: 100%;" src="imgs/House.jpg">
+        </div>
+
+        <div class="formulario">
+            <img src="imgs/BrownChicken.jpg">
+            <br>
+            <span><b>Insira um nome de Usuário:</b></span>
+            <input id="ipt_nomeUser"><br>
+
+            <span><b>Insira o seu email:</b></span>
+            <input id="ipt_emailUser"><br>
+
+            <span><b>Crie uma senha para a sua conta:</b></span>
+            <input type="password" id="ipt_senhaUser"><br>
+
+            <span><b>Confirme sua senha:</b></span>
+            <input type="password" id="ipt_senhaConfirmacaoUser"><br>
+
+            <button onclick="Cadastrar()">Cadastrar-se</button>
+        </div>
+    </div>
+
+    <!-- FIM DO BANNER -->
+    <!-- INICIO DO FOOTER -->
+
+    <div class="footer">
+        &bigstar; <span>Site criado para auxiliar as pessoas interessadas em Stardew Valley</span> &bigstar;
+    </div>
+
+</body>
+
+</html>
+
+<script>
+    function Cadastrar() {
+        var var_nomeUsuario = ipt_nomeUser.value;
+        var var_emailUsuario = ipt_emailUser.value;
+        var var_senhaUsuario = ipt_senhaUser.value;
+        var var_confirmacaoSenhaUsuario = ipt_senhaConfirmacaoUser.value;
+        var erro = false;
+
+        // Validações dos campos de entrada
+
+        if (var_nomeUsuario.length < 5) {
+            alert("Nome muito curto! Deve ter no mínimo 5 caracteres.")
+            erro = true;
+        }
+
+        if (var_nomeUsuario.length > 20) {
+            alert("Nome muito grande! Deve ter no máximo 20 caracteres.")
+            erro = true;
+        }
+
+        if (var_emailUsuario.endsWith('@gmail.com') || var_emailUsuario.endsWith('@hotmail.com') || var_emailUsuario.endsWith('@outlook.com')) { } else {
+            alert("Aceitamos apenas gmail, hotmail e outlook, verifique se preencheu corretamente o campo de email.")
+            erro = true;
+        }
+
+        if (var_emailUsuario.startsWith('@')) {
+            alert("Informe corretamente seu email, deve haver algo antes do @ !")
+            erro = true;
+        }
+
+        if(var_emailUsuario.length > 30){
+            alert("Email muito longo! máximo de 30 caracteres")
+            erro = true;
+        }
+
+        if (var_senhaUsuario == "" || var_confirmacaoSenhaUsuario == "") {
+            alert("É obrigatório informar uma senha e confirma-la.")
+            erro = true;
+        } else if (var_senhaUsuario.length < 6) {
+            alert("Senha fraca, tenha no mínimo 6 caracteres.")
+            erro = true;
+        } else if (var_senhaUsuario.length > 50) {
+            alert("Senha extremamente grande, queria só ver se você lembraria dela se não passasse por uma validação..")
+            erro = true;
+        }
+        else if (var_senhaUsuario.length > 20) {
+            alert("Senha muito grande, limite máximo de 20 caracteres.")
+            erro = true;
+        }
+        else if (var_senhaUsuario != var_confirmacaoSenhaUsuario) {
+            alert("As senhas informadas são divergentes, verifique se você colocou a mesma senha em ambos os campos.")
+            erro = true;
+        }
+
+        if (erro == false) {
+            // Enviando o valor da nova input
+            fetch("/usuarios/cadastrar", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    // crie um atributo que recebe o valor recuperado aqui
+                    nomeServer: var_nomeUsuario,
+                    emailServer: var_emailUsuario,
+                    senhaServer: var_senhaUsuario
+                    // Agora vá para o arquivo routes/usuario.js
+                })
+            }).then(function (resposta) {
+
+                console.log("resposta: ", resposta);
+
+                if (resposta.ok) {
+                    alertaCadastro.innerHTML = `
+                    <b>Cadastro Feito Com sucesso!</b>
+                    <br>
+                    Redirecionando para o Login...
+                    `;
+                    alertaCadastro.style.display = "flex";
+
+                    setTimeout(() => {
+                        alertaCadastro.style.display = "none";
+                    }, "2000")
+
+                    setTimeout(() => {
+                        window.location = "login.html";
+                    }, "2500")
+
+                } else {
+                    throw ("Houve um erro ao tentar realizar o cadastro!");
+                }
+            }).catch(function (resposta) {
+                console.log(`#ERRO: ${resposta}`);
+            });
+
+            return false;
+        }
+    }
+</script>

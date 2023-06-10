@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stardew Community | Login</title>
+    <link rel="icon" href="imgs/chicken.jpg">
+    <link rel="stylesheet" href="css/loginStyle.css">
+</head>
+
+<body>
+    <!-- INICIO DO HEADER -->
+    <div class="header">
+        <div class="conteiner">
+            <h1>Stardew Community</h1>
+            <ul>
+
+                <li>
+                    <a href="index.html">Home</a>
+                </li>
+
+                <li>
+                    <a href="sobreJogo.html">Sobre o Jogo</a>
+                </li>
+
+                <li>
+                    <a class="selecionado" href="">Login</a>
+                </li>
+
+                <li>
+                    <a href="cadastro.html">Cadastro</a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+
+    <!-- FIM DO HEADER -->
+    <!-- COMECO DO BANNER -->
+
+    <div class="banner">
+
+        <div id="alertaLogin" class="LoginTxt" style="display: none;">
+        </div>
+
+        <div class="imagem">
+            <img style="border: black 2px solid; height: 80vh;" src="imgs/stardropHouse.jpg">
+        </div>
+
+        <div class="formulario">
+            <b>Bem-Vindo(a) de Volta!</b>
+            <br>
+            <img src="imgs/BlueChicken.jpg">
+            <br>
+            <span><b>Insira o seu email:</b></span>
+            <input id="ipt_email"><br>
+
+            <span><b>Insira sua senha:</b></span>
+            <input type="password" id="ipt_senha"><br><br>
+
+            <button onclick="Entrar()">Entrar</button><br>
+
+            <span class="redirecionarCadastro"><b>Não possui uma conta?</b><u><a
+            href="cadastro.html"><b>Clique
+            aqui.</b></a></u>
+            </span>
+        </div>
+
+    </div>
+
+    <!-- FIM DO BANNER -->
+    <!-- INICIO DO FOOTER -->
+
+    <div class="footer">
+        &bigstar; <span>Site criado para auxiliar as pessoas interessadas em Stardew Valley</span> &bigstar;
+    </div>
+
+</body>
+
+</html>
+
+<script>
+    function Entrar() {
+        var emailVar = ipt_email.value;
+        var senhaVar = ipt_senha.value;
+
+        if (emailVar == "" || senhaVar == "") {
+            alertaLogin.style.display = "flex"
+            alertaLogin.innerHTML = `Por favor, preencha todos os campos para realizar o login..`;
+
+            setTimeout(function () {
+                alertaLogin.style.display = "none";
+            }, 5000);
+
+            return false;
+        }
+
+        console.log("FORM LOGIN: ", emailVar);
+        console.log("FORM SENHA: ", senhaVar);
+        
+        fetch("/usuarios/autenticar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                emailServer: emailVar,
+                senhaServer: senhaVar
+            })
+        }).then(function (resposta) {
+            console.log("ESTOU NO THEN DO entrar()!")
+
+            if (resposta.ok) {
+                console.log(resposta);
+
+                resposta.json().then(json => {
+                    console.log(json);
+                    console.log(JSON.stringify(json));
+
+                    sessionStorage.EMAIL_USUARIO = json.emailUsuario;
+                    sessionStorage.NOME_USUARIO = json.nomeUsuario;
+                    sessionStorage.ID_USUARIO = json.idUsuario;
+
+                    alertaLogin.innerHTML = `
+                    <b>Login Feito Com sucesso!</b>
+                    <br>
+                    Redirecionando para a Dashboard...
+                    `;
+
+                    alertaLogin.style.display = "flex";
+
+                    setTimeout(function () {
+                        alertaLogin.style.display = "none";
+                    }, 4000);
+
+                    setTimeout(function () {
+                        window.location = "./dashboard/dashboard-S.html";
+                    }, 4500);
+
+                });
+
+            } else {
+                alertaLogin.style.display = "flex";
+                alertaLogin.innerHTML = `
+                <b>Oops.. Usuario não encontrado</b>
+                <br>
+                Tem certeza que o email informado é o mesmo email cadastrado e que a senha está correta?
+                `;
+
+                setTimeout(function () {
+                    alertaLogin.style.display = "none";
+                }, 10000);
+
+                console.log("Houve um erro ao tentar realizar o login!");
+
+                resposta.text().then(texto => {
+                    console.error(texto);
+                    finalizarAguardar(texto);
+                });
+            }
+
+        }).catch(function (erro) {
+            console.log(erro);
+        })
+
+        return false;
+    }
+</script>
