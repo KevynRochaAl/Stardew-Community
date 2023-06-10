@@ -1,0 +1,100 @@
+/* INICIO DO HEADER */
+*{
+    font-family: Arial;
+}
+
+body{
+    margin: 0;
+}
+
+.header{
+    background-color: black;
+    width: 100%;
+    height: 70px;
+}
+
+.header .conteiner h1{
+    color: yellow;
+}
+
+ul{
+    width: 60%;
+    list-style: none;
+    display: flex;
+    justify-content: space-around;
+    font-size: large;
+}
+
+.conteiner{
+    width: 80%;
+    margin: auto;
+    display: flex;
+}
+
+.header .conteiner{
+    justify-content: space-between;
+    align-items: center;
+}
+
+a{
+    padding-top: 32px;
+    padding-bottom: 14px;
+    color: yellow;
+    text-decoration: none;
+}
+
+.selecionado{
+    background-color: #272626;
+    border-bottom: yellow solid 7px;
+}
+
+/* FIM DO HEADER */
+/* INICIO DO BANNER */
+
+.banner{
+    display: flex;
+    justify-content: center;
+}
+
+.formulario{
+    background-image: linear-gradient(rgba(255, 77, 57, 0.75), rgba(33, 25, 119, 0.75));
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-size: larger;
+    border: 2px solid white;
+    color: lightcyan;
+}
+
+.formulario img{
+    width: 80px;
+    height: 80px;
+    border: black 2px solid;
+}
+
+.imagem{
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-position: center;
+    background-size: cover;
+}
+/* FIM DO BANNER */
+/* INICIO DO FOOTER */
+
+.footer{
+    width: 100%;
+    background-color: black;
+    display: flex;
+    height: 50px;
+    color: yellow;
+    justify-content: center;
+    align-items: center;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    position: fixed;
+}
